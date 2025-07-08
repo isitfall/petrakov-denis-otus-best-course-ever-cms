@@ -2,11 +2,15 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { CoursesModule } from './courses/courses.module';
-import { LessonsModule } from './lessons/lessons.module';
+import { CommentsModule } from './comments/comments.module';
+import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
-  imports: [UsersModule, CoursesModule, LessonsModule],
+  imports: [
+    MongooseModule.forRoot('mongodb://localhost:27017/cms-db'),
+    UsersModule,
+    CommentsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
