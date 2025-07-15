@@ -1,38 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { Comment } from './schemas/comments.schema';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Comment } from './comment.entity';
 
 @Injectable()
 export class CommentsService {
   constructor(
-    @InjectModel(Comment.name) private commentModel: Model<Comment>,
+    @InjectRepository(Comment)
+    private commentRepository: Repository<Comment>,
   ) {}
 
-  async create(dto: {
-    text: string;
-    userId: string;
-    lessonId: string;
-  }): Promise<Comment> {
-    const createdComment = new this.commentModel(dto);
-    return createdComment.save();
+  async create(comment: Partial<Comment>): Promise<Comment> {
+    const newComment = this.commentRepository.create(comment);
+    return this.commentRepository.save(newComment);
   }
 
   async findAll(): Promise<Comment[]> {
-    return this.commentModel.find().exec();
+    return this.commentRepository.find();
   }
 
   async findOne(id: string): Promise<Comment> {
-    const comment = await this.commentModel.findById(id).exec();
-    if (!comment) throw new Error('Comment not found');
-    return comment;
+    return this.commentRepository.findOne({ where: { id } });
   }
 
-  async update(id: string, text: string): Promise<Comment | null> {
-    return this.commentModel.findByIdAndUpdate(id, { text }, { new: true });
+  async update(id: string, comment: Partial<Comment>): Promise<Comment> {
+    await this.commentRepository.update(id, comment);
+    return this.commentRepository.findOne({ where: { id } });
   }
 
-  async remove(id: string): Promise<any> {
-    return this.commentModel.findByIdAndDelete(id);
+  async remove(id: string): Promise<void> {
+    await this.commentRepository.delete(id);
   }
 }
