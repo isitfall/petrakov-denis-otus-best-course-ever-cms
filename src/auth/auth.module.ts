@@ -5,7 +5,7 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }), // ✅ Регистрация jwt-стратегии
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: 'your-secret-key',
       signOptions: { expiresIn: '1h' },
