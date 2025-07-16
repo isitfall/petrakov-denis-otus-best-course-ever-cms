@@ -10,14 +10,14 @@ export class Comment {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'text', nullable: false })
   text: string;
 
-  @Column()
-  userId: string; // ID пользователя
+  @Column({ type: 'uuid', nullable: false })
+  userId: string;
 
-  @Column()
-  lessonId: string; // ID занятия
+  @Column({ type: 'uuid', nullable: false })
+  lessonId: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

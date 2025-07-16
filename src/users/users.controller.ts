@@ -5,17 +5,14 @@ import {
   Get,
   HttpCode,
   Param,
-  Patch,
   Post,
   Put,
   UseGuards,
 } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './schemas/user.schema';
+import { User } from './user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersService } from './users.service';
-import { UpdateUserRoleDto } from './dto/update-user-role.dto';
-import { UpdateUserStatusDto } from './dto/update-user-status.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
@@ -25,7 +22,7 @@ export class UsersController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() dto: CreateUserDto): Promise<User> {
+  create(@Body() dto: CreateUserDto): Promise<User | null> {
     return this.usersService.create(dto);
   }
 
@@ -46,21 +43,5 @@ export class UsersController {
   @Get()
   findAll(): Promise<User[]> {
     return this.usersService.findAll();
-  }
-
-  @Put(':id/role')
-  updateRole(
-    @Param('id') id: string,
-    @Body() dto: UpdateUserRoleDto,
-  ): Promise<User | null> {
-    return this.usersService.updateRole(id, dto);
-  }
-
-  @Patch(':id/status')
-  updateStatus(
-    @Param('id') id: string,
-    @Body() dto: UpdateUserStatusDto,
-  ): Promise<User | null> {
-    return this.usersService.updateStatus(id, dto);
   }
 }

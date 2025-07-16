@@ -19,13 +19,18 @@ import { AuthGuard } from '@nestjs/passport';
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) {}
 
+  @Get()
+  find(): Promise<Comment[]> {
+    return this.commentsService.findAll();
+  }
+
   @Post()
   create(@Body() dto: CreateCommentDto): Promise<Comment> {
     return this.commentsService.create(dto);
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Comment> {
+  findOne(@Param('id') id: string): Promise<Comment | null> {
     return this.commentsService.findOne(id);
   }
 
@@ -33,7 +38,7 @@ export class CommentsController {
   update(
     @Param('id') id: string,
     @Body() dto: UpdateCommentDto,
-  ): Promise<Comment> {
+  ): Promise<Comment | null> {
     return this.commentsService.update(id, dto);
   }
 

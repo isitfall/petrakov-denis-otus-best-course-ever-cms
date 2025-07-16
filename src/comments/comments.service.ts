@@ -10,20 +10,20 @@ export class CommentsService {
     private commentRepository: Repository<Comment>,
   ) {}
 
-  async create(comment: Partial<Comment>): Promise<Comment> {
-    const newComment = this.commentRepository.create(comment);
-    return this.commentRepository.save(newComment);
+  async findOne(id: string): Promise<Comment | null> {
+    return this.commentRepository.findOne({ where: { id } });
   }
 
   async findAll(): Promise<Comment[]> {
     return this.commentRepository.find();
   }
 
-  async findOne(id: string): Promise<Comment> {
-    return this.commentRepository.findOne({ where: { id } });
+  async create(comment: Partial<Comment>): Promise<Comment> {
+    const newComment = this.commentRepository.create(comment);
+    return this.commentRepository.save(newComment);
   }
 
-  async update(id: string, comment: Partial<Comment>): Promise<Comment> {
+  async update(id: string, comment: Partial<Comment>): Promise<Comment | null> {
     await this.commentRepository.update(id, comment);
     return this.commentRepository.findOne({ where: { id } });
   }
