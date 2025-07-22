@@ -5,16 +5,22 @@ import { UsersModule } from './users/users.module';
 import { CommentsModule } from './comments/comments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { config } from 'dotenv';
+
+config();
+
+const { DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_PORT } = process.env;
 
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'admin',
-      password: 'secret',
-      database: 'cms_db',
+      host: DB_HOST,
+      // @ts-expect-error required
+      port: parseInt(DB_PORT),
+      username: DB_USERNAME,
+      password: DB_PASSWORD,
+      database: DB_NAME,
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
