@@ -5,6 +5,8 @@ import { UsersModule } from './users/users.module';
 import { CommentsModule } from './comments/comments.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { config } from 'dotenv';
 
 config();
@@ -13,11 +15,16 @@ const { DB_HOST, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_PORT } = process.env;
 
 @Module({
   imports: [
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      autoSchemaFile: true,
+      playground: true,
+      introspection: true,
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: DB_HOST,
-      // @ts-expect-error required
-      port: parseInt(DB_PORT),
+      port: parseInt(DB_PORT || ''),
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_NAME,
