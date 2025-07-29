@@ -10,10 +10,8 @@ export class AuthService {
   ) {}
 
   async login(email: string, password: string) {
-    console.log('login', { email, password });
     try {
       let user = await this.usersService.findOneByEmail(email);
-      console.log('user', user);
       if (user && password !== user.password) {
         throw new UnauthorizedException();
       }
@@ -26,7 +24,6 @@ export class AuthService {
           role: 'user',
         });
       }
-      console.log('after create', user);
       return {
         access_token: this.jwtService.sign({
           email: user?.email,
